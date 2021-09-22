@@ -72,7 +72,7 @@ namespace Domain.Services
                 TakeDate = book.TakeDate,
                 ReturnDate = book.ReturnDate
             });
-        }public IEnumerable<BookResponseModel> GetAllByLanguage(string language)
+        }public IEnumerable<BookResponseModel> GetAllByLanguage(Language language)
         {
             var books = _libraryRepository.GetAll();
             var updatedBooks = books.Where(book => book.Language == language);
@@ -174,6 +174,7 @@ namespace Domain.Services
                 ReturnDate = book.ReturnDate,
                 TakeDate = book.TakeDate
             });
+            Console.WriteLine($"Book ISBN: {book.ISBN} was added to Library");
         }
 
         public void Take(string isbn, string readerName, DateTime returnDate)
@@ -198,16 +199,26 @@ namespace Domain.Services
                 return;
             }
             _libraryRepository.SwitchStatus(isbn, readerName, returnDate);
+            Console.WriteLine($"Dear.{readerName} you can read the book until {returnDate:D}. " +
+                $"Every next day will be fined by one candy");
         }
 
         public void Return(string isbn, string readerName)
         {
+            var books = _libraryRepository.GetAll();
+            var isLate = books.Single(book => book.ISBN == isbn).ReturnDate;
+            if (isLate < DateTime.Now)
+            {
+                Console.WriteLine($"Dear.{readerName} where are my candies? Did you read the book twice...? :)");
+            }
             _libraryRepository.SwitchStatus(isbn);
+            Console.WriteLine($"Book ISBN: {isbn} was returned to Library");
         }
 
         public void Delete(string isbn)
         {
             _libraryRepository.Delete(isbn);
+            Console.WriteLine($"Book ISBN: {isbn} was deleted from Library");
         }
     }
 }

@@ -19,7 +19,7 @@ namespace VismaBookLibraryApp
             string name;
             string author;
             Category category;
-            string language;
+            Language language;
             DateTime publicationDate;
             string isbn;
             Filter filter;
@@ -30,7 +30,7 @@ namespace VismaBookLibraryApp
 
             while (true)
             {
-                Console.WriteLine("Available commands:");
+                Console.WriteLine("\nAvailable commands:");
                 Console.WriteLine("1 - List all the books");
                 Console.WriteLine("2 - Add a new book");
                 Console.WriteLine("3 - Take a book");
@@ -39,7 +39,6 @@ namespace VismaBookLibraryApp
                 Console.WriteLine("6 - End program");
 
                 var chosenCommand = Console.ReadLine();
-                //ConsoleKeyInfo cki;
                 switch (chosenCommand)
                 {
                     case "1":
@@ -63,6 +62,7 @@ namespace VismaBookLibraryApp
                             case Filter.Author:
                                 Console.WriteLine("Enter Author name:");
                                 author = Console.ReadLine();
+
                                 books = _libraryService.GetAllByAuthor(author);
                                 foreach (var book in books)
                                 {
@@ -70,8 +70,10 @@ namespace VismaBookLibraryApp
                                 }
                                 break;
                             case Filter.Category:
-                                Console.WriteLine("Select book Category (0 - Fiction, 1 - Nonfiction, 2 - Teens, 3 - Children):");
+                                Console.WriteLine("Select book Category " +
+                                    "(0 - Fiction, 1 - Nonfiction, 2 - Teens, 3 - Children):");
                                 Enum.TryParse(Console.ReadLine(), out category);
+
                                 books = _libraryService.GetAllByCategory(category);
                                 foreach (var book in books)
                                 {
@@ -79,8 +81,9 @@ namespace VismaBookLibraryApp
                                 }
                                 break;
                             case Filter.Language:
-                                Console.WriteLine("Enter Language:");
-                                language = Console.ReadLine();
+                                Console.WriteLine("Select book Language (0 - Other, 1 - Lithuanian, 2 - English):");
+                                Enum.TryParse(Console.ReadLine(), out language);
+
                                 books = _libraryService.GetAllByLanguage(language);
                                 foreach (var book in books)
                                 {
@@ -90,6 +93,7 @@ namespace VismaBookLibraryApp
                             case Filter.ISBN:
                                 Console.WriteLine("Enter ISBN:");
                                 isbn = Console.ReadLine();
+
                                 books = _libraryService.GetAllByIsbn(isbn);
                                 foreach (var book in books)
                                 {
@@ -99,6 +103,7 @@ namespace VismaBookLibraryApp
                             case Filter.Name:
                                 Console.WriteLine("Enter book Name:");
                                 name = Console.ReadLine();
+
                                 books = _libraryService.GetAllByName(name);
                                 foreach (var book in books)
                                 {
@@ -108,6 +113,7 @@ namespace VismaBookLibraryApp
                             case Filter.Available:
                                 Console.WriteLine("Enter 0 - for taken or 1 - for available books:");
                                 isAvailable = Convert.ToInt32(Console.ReadLine());
+
                                 books = isAvailable == 0 ? _libraryService.GetAllByIsAvailable(false) : _libraryService.GetAllByIsAvailable(true);
                                 foreach (var book in books)
                                 {
@@ -126,8 +132,8 @@ namespace VismaBookLibraryApp
                         Console.WriteLine("Select book Category (0 - Fiction, 1 - Nonfiction, 2 - Teens, 3 - Children):");
                         Enum.TryParse(Console.ReadLine(), out category);
 
-                        Console.WriteLine("Enter book Language:");
-                        language = Console.ReadLine();
+                        Console.WriteLine("Select book Language (0 - Other, 1 - Lithuanian, 2 - English):");
+                        Enum.TryParse(Console.ReadLine(), out language);
 
                         Console.WriteLine("Enter book Publication date:");
                         DateTime.TryParse(Console.ReadLine(), out publicationDate);
@@ -145,29 +151,33 @@ namespace VismaBookLibraryApp
                             ISBN = isbn,
                             IsAvailable = true
                         });
-
                         break;
                     case "3":
                         Console.WriteLine("Enter book ISBN");
                         isbn = Console.ReadLine();
+
                         Console.WriteLine("Enter reader Name:");
                         readerName = Console.ReadLine();
+
                         Console.WriteLine("Enter reading Period days (max 60 days):");
                         TimeSpan.TryParse(Console.ReadLine(), out period);
+
                         returnDate = DateTime.Now.Add(period);
                         _libraryService.Take(isbn, readerName, returnDate);
-                        Console.WriteLine(period);
                         break;
                     case "4":
                         Console.WriteLine("Enter book ISBN");
                         isbn = Console.ReadLine();
+
                         Console.WriteLine("Enter reader's Name:");
                         readerName = Console.ReadLine();
+
                         _libraryService.Return(isbn, readerName);
                         break;
                     case "5":
                         Console.WriteLine("Enter book ISBN:");
                         isbn = Console.ReadLine();
+
                         _libraryService.Delete(isbn);
                         break;
                     case "6":
@@ -175,6 +185,5 @@ namespace VismaBookLibraryApp
                 }
             }
         }
-
     }
 }

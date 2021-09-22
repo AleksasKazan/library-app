@@ -11,7 +11,7 @@ namespace Persistence.Models.ReadModels
 
         public Category Category { get; set; }
 
-        public string Language { get; set; }
+        public Language Language { get; set; }
 
         public DateTime PublicationDate { get; set; }
 
